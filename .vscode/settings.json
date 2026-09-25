@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Team6-Huang_Cheng.slnx"
+    "dotnet.defaultSolution": "Beat Rebel.slnx"
 }

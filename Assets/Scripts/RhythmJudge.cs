@@ -52,12 +52,18 @@ public sealed class RhythmJudge : MonoBehaviour
 
         if (gameOver)
         {
+            // if (keyboard != null &&
+            //     keyboard.rKey.wasPressedThisFrame)
+            // {
+            //     SceneManager.LoadScene(
+            //         SceneManager.GetActiveScene().name
+            //     );
+            // }
+
             if (keyboard != null &&
                 keyboard.rKey.wasPressedThisFrame)
             {
-                SceneManager.LoadScene(
-                    SceneManager.GetActiveScene().name
-                );
+                SceneManager.LoadScene("Score");
             }
 
             return;
