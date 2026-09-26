@@ -33,6 +33,12 @@ public sealed class RhythmJudge : MonoBehaviour
     private float holdEndBeat;
     private Color normalRightColor;
 
+    private int maxCombo;
+    private int perfectCount;
+    private int goodCount;
+    private int missCount;
+    private bool completed;
+
     private void Start()
     {
         if (rightIndicator != null)
@@ -52,14 +58,6 @@ public sealed class RhythmJudge : MonoBehaviour
 
         if (gameOver)
         {
-            // if (keyboard != null &&
-            //     keyboard.rKey.wasPressedThisFrame)
-            // {
-            //     SceneManager.LoadScene(
-            //         SceneManager.GetActiveScene().name
-            //     );
-            // }
-
             if (keyboard != null &&
                 keyboard.rKey.wasPressedThisFrame)
             {
@@ -75,6 +73,7 @@ public sealed class RhythmJudge : MonoBehaviour
 
         if (clock.ElapsedSeconds >= roundLengthSeconds)
         {
+            completed = true;
             EndRound("LEVEL COMPLETE - PRESS R");
             return;
         }
@@ -205,6 +204,12 @@ public sealed class RhythmJudge : MonoBehaviour
             : (perfect ? 100 : 50);
 
         combo++;
+        maxCombo = Mathf.Max(maxCombo, combo);
+
+        if (perfect)
+            perfectCount++;
+        else
+            goodCount++;
 
         if (key == "F" && fever != null)
             fever.RegisterLeftHit();
@@ -219,6 +224,7 @@ public sealed class RhythmJudge : MonoBehaviour
     {
         energy = Mathf.Max(0, energy - 10);
         combo = 0;
+        missCount++;
 
         if (key == "F" && fever != null)
             fever.RegisterLeftMiss();
@@ -229,7 +235,10 @@ public sealed class RhythmJudge : MonoBehaviour
         UpdateScoreUI();
 
         if (energy == 0)
+        {
+            completed = false;
             EndRound("GAME OVER - PRESS R");
+        }
     }
 
     private void EndRound(string message)
@@ -240,6 +249,15 @@ public sealed class RhythmJudge : MonoBehaviour
         gameOver = true;
         feedbackText.text = message;
         clock.enabled = false;
+
+        GameResult.Save(
+            score,
+            maxCombo,
+            perfectCount,
+            goodCount,
+            missCount,
+            completed
+        );
     }
 
     private void SetHoldIndicator(bool holding)
